@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="T1.TcameraPage"
+             Title="TcameraPage"
+             >
+    <FlexLayout Direction="Column">
+        <Label x:Name="Subtitle"/>
+        <ContentView x:Name="Contents"/>
+        <Label x:Name="Help"/>
+        <Button Text="Back" Clicked="BackButton_Clicked" x:Name="BackButton" BackgroundColor="red"/>
+        <Button Text="Next" Clicked="NextButton_Clicked" x:Name="NextButton" BackgroundColor="red"/>
+    </FlexLayout>
+</ContentPage>
