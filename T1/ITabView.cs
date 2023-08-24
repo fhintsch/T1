@@ -3,7 +3,7 @@ namespace T1
 {
 	public interface ITabView
 	{
-        public void ActivateAsync(bool foreground);
+        public Task ActivateAsync(bool foreground);
     }
 }
 

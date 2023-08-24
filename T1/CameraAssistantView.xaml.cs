@@ -11,52 +11,81 @@ public partial class CameraAssistantView : ContentView, ITabView
     private void CameraView_CamerasLoaded(object sender, EventArgs e)
     {
         Console.WriteLine($"CamerasLoaded");
+    }
+
+    private async Task EnableCamera()
+    {
         var cameras = cameraView.Cameras;
         if (cameras.Count > 0)
         {
             cameraView.Camera = cameras.First();
-            EnableCamera();
-        }
-    }
-
-    private async void EnableCamera()
-    {
-        //MainThread.BeginInvokeOnMainThread(async () =>
-        //{
-        cameraView.Camera = cameraView.Cameras.First();
-        cameraView.MirroredImage = true;
-        var result = await cameraView.StartCameraAsync();
-        Console.WriteLine($"Camera {cameraView.Camera} start {result}");
-        //});
-    }
-
-
-    private async void DisableCamera()
-    {
-        cameraView.Camera = cameraView.Cameras.First();
-        Camera.MAUI.CameraResult result;
-        for (int i = 0; i < 5; i++)
-        {
-            result = await cameraView.StopCameraAsync();
-            Console.WriteLine($"Camera {cameraView.Camera} stop {result}");
-            if (result == Camera.MAUI.CameraResult.Success)
+            cameraView.IsEnabled = true;
+            cameraView.MirroredImage = false;
+            Camera.MAUI.CameraResult result;
+            for (int i = 0; i < 5; i++)
             {
-                return;
+                result = await cameraView.StartCameraAsync();
+                Console.WriteLine($"Camera {cameraView.Camera} start {result}");
+                if (result == Camera.MAUI.CameraResult.Success)
+                {
+                    return;
+                }
             }
-        }
-    }
-
-
-    public void ActivateAsync(bool foreground)
-    {
-        if (foreground == true)
-        {
-            EnableCamera();
         }
         else
         {
-            DisableCamera();
+            Console.WriteLine($"No camera found, cannot start camera");
         }
     }
 
+
+    private async Task DisableCamera()
+    {
+        var cameras = cameraView.Cameras;
+        if (cameras.Count > 0)
+        {
+            cameraView.Camera = cameras.First();
+            cameraView.IsEnabled = false;
+            Camera.MAUI.CameraResult result;
+            for (int i = 0; i < 5; i++)
+            {
+                result = await cameraView.StopCameraAsync();
+                Console.WriteLine($"Camera {cameraView.Camera} stop {result}");
+                if (result == Camera.MAUI.CameraResult.Success)
+                {
+                    return;
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine($"No camera found, cannot stop camera");
+        }
+    }
+
+
+    public async Task ActivateAsync(bool foreground)
+    {
+        if (foreground == true)
+        {
+            await EnableCamera();
+        }
+        else
+        {
+            await DisableCamera();
+        }
+    }
+
+    async void BtnCamera_Clicked(System.Object sender, System.EventArgs e)
+    {
+        if (cameraView.IsEnabled == true)
+        {
+            await DisableCamera();
+        }
+        else
+        {
+            await EnableCamera();
+        }
+
+    }
 }

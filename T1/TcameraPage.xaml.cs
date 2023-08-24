@@ -123,7 +123,7 @@ public partial class TcameraPage : ContentPage
         return frame;
     }
 
-    private void Activate(View view)
+    private async void Activate(View view)
     {
         Console.WriteLine($"ENTER {view.GetType()}");
         ContentView contentView = this.FindByName<ContentView>("Contents");
@@ -139,7 +139,7 @@ public partial class TcameraPage : ContentPage
                 contentView.Content = view;
                 if (view is ITabView)
                 {
-                    ((ITabView)view).ActivateAsync(true);
+                    await ((ITabView)view).ActivateAsync(true);
                 }
             }
         }
@@ -149,7 +149,7 @@ public partial class TcameraPage : ContentPage
         }
     }
 
-    private void DeActivateView()
+    private async void DeActivateView()
     {
         ContentView contentView = this.FindByName<ContentView>("Contents");
         View view = contentView?.Content;
@@ -158,7 +158,7 @@ public partial class TcameraPage : ContentPage
             Console.WriteLine($"LEAVE {view.GetType()}");
             if (view is ITabView)
             {
-                ((ITabView)view).ActivateAsync(false);
+                await ((ITabView)view).ActivateAsync(false);
             }
             view = null;
         }
